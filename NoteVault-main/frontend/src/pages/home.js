@@ -114,12 +114,12 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-4">
+    <div className="min-h-screen bg-white text-white flex flex-col items-center p-4">
      
 
       {/* Search and Filter Section */}
       <div className="flex items-center w-full max-w-5xl mb-4 space-x-4">
-        <div className="flex items-center bg-gray-700 rounded-full px-4 py-2 w-3/5">
+        <div className="flex items-center bg-white border-2 rounded-md px-4 py-2 w-3/5">
           <FaSearch className="text-white mr-2" />
           <input
             type="text"

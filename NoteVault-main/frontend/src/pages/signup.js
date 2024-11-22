@@ -1,105 +1,122 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Signup = () => {
   const [username, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    // Handle signup submission logic here
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
+
     try {
-        const response = await fetch('http://localhost:8000/register/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, email, password }),
-        });
-  
-        const data = await response.json();
-        if (response.ok) {
-          setSuccess(true);
-          setTimeout(() => {
-            navigate('/login');
-          }, 1500); // 1.5 second delay before redirecting
-        } else {
-          setError(data.message);
-        }
-      } catch (error) {
-        setError('Something went wrong. Please try again.');
+      const response = await fetch('http://localhost:8000/register/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem('username', username);
+        localStorage.setItem('token', data.access);
+        localStorage.setItem('refresh', data.refresh);
+        toast.success('Signup successful! Redirecting...');
+        setTimeout(() => navigate('/home'), 1000);
+      } else {
+        toast.error(data.message || 'Signup failed!!! Try a different username');
       }
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.');
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-black">
-      <div className="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-sm">
-        <h1 className="text-3xl text-center text-white font-bold mb-6">NOTE VAULT</h1>
+    <div className="min-h-screen bg-black">
+      <div className="flex items-center justify-center mb-10 pt-[60px]">
+      <img src="/logo.jpeg" alt="Logo" className="w-40 h-28 mr-4 -ml-16" />
+      <div>
+        <h1 className="text-5xl text-white font-bold text-center mb-3">NOTE VAULT</h1>
+        <h3 className="text-white text-xl font-semibold">Secure your thoughts, unlock your potential</h3>
+      </div>
+    </div>
+
+    
+    <div className=" bg-black flex items-center justify-center">
+      <ToastContainer position="top-center" autoClose={3000} hideProgressBar />
+      <div className="bg-black p-8 rounded-md w-full max-w-md border-2 border-white">
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-gray-400 text-sm font-semibold mb-2">UserName</label>
+          <div className="mb-4 flex items-center">
+            <label className="text-white text-sm font-semibold w-1/3">Username</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUserName(e.target.value)}
-              className="w-full p-2 bg-gray-700 border border-gray-600 text-white rounded"
-              placeholder="Enter your first name"
+              className="w-2/3 p-2 ml-[36px] bg-white text-black rounded outline-none"
+              placeholder="Enter your username"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-400 text-sm font-semibold mb-2">Email</label>
+          <div className="mb-4 flex items-center">
+            <label className="text-white text-sm font-semibold w-1/3">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 bg-gray-700 border border-gray-600 text-white rounded"
+              className="w-2/3 p-2 ml-[36px] bg-white text-black rounded outline-none"
               placeholder="Enter your email"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-400 text-sm font-semibold mb-2">Password</label>
+          <div className="mb-4 flex items-center">
+            <label className="text-white text-sm font-semibold w-1/3">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 bg-gray-700 border border-gray-600 text-white rounded"
+              className="w-2/3 p-2 ml-[36px] bg-white text-black rounded outline-none"
               placeholder="Enter your password"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-400 text-sm font-semibold mb-2">Confirm Password</label>
+          <div className="mb-4 flex items-center">
+            <label className="text-white text-sm font-semibold w-1/3">Confirm Password</label>
             <input
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full p-2 bg-gray-700 border border-gray-600 text-white rounded"
+              className="w-2/3 p-2 ml-[36px] bg-white text-black rounded outline-none"
               placeholder="Confirm your password"
               required
             />
           </div>
-          <div className="mb-6">
-            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+          <div className="m-6">
+            <button
+              type="submit"
+              className="w-full bg-white text-black py-2 rounded font-semibold hover:bg-gray-300"
+            >
               Register
             </button>
           </div>
-          <div className="text-center text-gray-400">
-            Existing user? <Link to="/login" className="text-blue-400 hover:text-blue-500">Login</Link>
+          <div className="text-center text-white">
+            Existing user?{' '}
+            <Link to="/login" className="text-white hover:underline">
+              Login
+            </Link>
           </div>
         </form>
       </div>
+    </div>
     </div>
   );
 };

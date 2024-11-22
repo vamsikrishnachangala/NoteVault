@@ -77,8 +77,8 @@ const Editor = () => {
 
   // Reset the form
   const handleReset = () => {
-    setTitle('');
-    setCategory('');
+    // setTitle('');
+    // setCategory('');
     setNote('');
   };
 
