@@ -44,7 +44,7 @@ const Header = () => {
 
         {/* User Greeting and Sidebar Toggle */}
         <div className="flex items-center space-x-4">
-          <p className="text-lg">Hello, {username}</p>
+          {username &&<p className="text-lg">Hello, {username}</p>}
           <button onClick={toggleSidebar} className="text-2xl focus:outline-none">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
